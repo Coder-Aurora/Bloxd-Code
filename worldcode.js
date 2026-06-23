@@ -1,6 +1,3 @@
-// refresh tool
-const refresher = '';
-
 // ===== declaration & initialization =====
 // msg
 var txt = {
@@ -158,12 +155,12 @@ const canSendCmd = (targetPlayerId = null, entityName = null) => {
 // ===== world callbacks =====
 onPlayerJoin = (playerId, fromReset) => {
     const pName = api.getEntityName(playerId);
-    // settings for all players --+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--
+    // settings for all players
     api.setClientOptions(playerId, {
         flySpeedMultiplier: 2,
     });
 
-    // settings for allowedPlayers --+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--
+    // settings for allowedPlayers
     if (canSendCmd(null, pName)) {
         playerInfo[pName] = { builderInfo: createBuilderInfo() };
 
@@ -225,7 +222,7 @@ onPlayerBoughtShopItem = (playerId, categoryKey, itemKey, item, userInput) => {
 onPlayerChat = (playerId, chatMessage, chn) => {
     const pName = api.getEntityName(playerId);
 
-    // cmd --+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--
+    // cmd
     const trimmed = chatMessage.trim();
     const cmd = trimmed.split(' ');
     const type = cmd[0].slice(1).toLowerCase();
@@ -302,14 +299,14 @@ onPlayerChat = (playerId, chatMessage, chn) => {
         if (!canSendCmd(null, pName)) return true;
 
         if (type === 'kick') {
-            const playerName = cmd[1];
+            const targetPlayerName = cmd[1];
 
-            if (!playerName || !isInLobby(null, playerName)) {
-                txt.local_warn(playerId, `Invalid player name: ${playerName} | Player is not in lobby. Please check your command.`);
+            if (!targetPlayerName || !isInLobby(null, targetPlayerName)) {
+                txt.local_warn(playerId, `Invalid player name: ${targetPlayerName} | Player is not in lobby. Please check your command.`);
                 return;
             }
             // Kick the target player
-            api.kickPlayer(api.getPlayerId(playerName), 'You were kicked by yourself😒😒');
+            api.kickPlayer(api.getPlayerId(targetPlayerName), 'You were kicked by yourself😒😒');
         }
         return false;
     }
@@ -318,8 +315,8 @@ onPlayerChat = (playerId, chatMessage, chn) => {
         const targetPlayerName = cmd[0].slice(1);
         const msg = cmd[1];
 
-        if (!playerName || !isInLobby(null, targetPlayerName)) {
-            txt.local_warn(playerId, `Invalid player name: ${playerName} | Player is not in lobby. Please check your command.`);
+        if (!targetPlayerName || !isInLobby(null, targetPlayerName)) {
+            txt.local_warn(playerId, `Invalid player name: ${targetPlayerName} | Player is not in lobby. Please check your command.`);
             return;
         }
 
