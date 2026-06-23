@@ -187,7 +187,7 @@ onPlayerJoin = (playerId, fromReset) => {
             }
         });
     }
-    // settings for normal players --+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--
+    // settings for normal players
     else {
         api.setClientOptions(playerId, {
             canChange: false,
@@ -335,26 +335,11 @@ onPlayerChat = (playerId, chatMessage, chn) => {
     return true;
 };  // return boolean | void | ChatTags | OnPlayerChatObjectResponse
 
-/*
-|    冰蓝色 {
-|    |    深冰蓝：          #2299DD,
-|    |    *标准冰蓝：       #66CCF2,
-|    |    *浅高亮冰蓝：     #A6E6FF,
-|    };
---+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--
-|    浅灰（偏冷适配冰蓝）{
-|    |    极浅灰白：        #E6EDF2,
-|    |    *中性冷浅灰：     #C8D6E0,
-|    |    *蓝调浅灰：       #A8BCCC,
-|    };
-*/
-
 
 let lastTickTime = api.now();
 const delay = 2;  // seconds
 
 tick = (ms) => {
-    // If not enough time has passed since lastTickTime, skip this tick.
     if (api.now() - lastTickTime < delay * 1000) return;
 
     lastTickTime = api.now();
