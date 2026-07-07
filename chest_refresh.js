@@ -47,16 +47,10 @@ var txt = {
 const allowedPlayers = ['Coder_Aurora'];
 
 const chestPoses = [
-    [-768, 26, 799],
-    [-768, 26, 783],
-    [-768, 26, 772],
-    [-739, 26, 772],
-    [-739, 26, 786],
-    [-739, 31, 799],
-    [-739, 41, 799]
+    /* arrays like [1000, 10, 2300] */
 ];
 
-const chestItems = ['Gold Coin', 'Apple', 'Book', 'Board'];
+const chestItems = [/* ... */];
 
 const canSendCmd = (playerId = null, playerName = null) => {
     if (playerId) {
