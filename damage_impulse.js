@@ -23,3 +23,4 @@ const damage = (attacker, damager, damageDealt = 2) => {
 };
 
 damage(api.getPlayerId('Coder_Aurora'), playerId);
+ 
