@@ -1,52 +1,94 @@
-const DELAY_QUEUE = [];
-let delay_counter = 1;
+const delayQueue = [];
+const loopPool = [];
+let delayCounter = 0;
+let loopCounter = 0;
 
 var async = {
-    delay_execution: (ms, callback) => {
-        const ID = ++delay_counter;
-        const FIRE_AT = Date.now() + ms;
+    delayExecution: (ms, callback) => {
+        const id = ++delayCounter;
+        const fireAt = Date.now() + ms;
 
-        DELAY_QUEUE.push({
-            ID: ID,
-            FIRE_AT: FIRE_AT,
-            CALLBACK: callback
+        delayQueue.push({
+            id,
+            fireAt,
+            callback
         });
 
-        return ID;
+        return id;
     },
 
-    cancel_execution: (callback_id) => {
-        for (let idx = 0; idx <= DELAY_QUEUE.length - 1; ++idx) {
-            if (DELAY_QUEUE[idx].ID === callback_id) {
-                DELAY_QUEUE.splice(idx, 1);
-
+    cancelExecution: (callbackId) => {
+        for (let index = 0; index < delayQueue.length; ++index) {
+            if (delayQueue[index].id === callbackId) {
+                delayQueue.splice(index, 1);
                 return true;
             }
         }
 
         return false;
+    },
+
+    setIntervalLoop: (intervalMs, callback) => {
+        const loopId = ++loopCounter;
+        const runLoop = () => {
+            const isExist = loopPool.some(item => item.loopId === loopId);
+            if (!isExist) return;
+
+            try {
+                callback();
+            } catch (err) {
+                console.log(`Caught loop error: ${err}`);
+            }
+
+            const delayId = async.delayExecution(intervalMs, runLoop);
+            const targetItem = loopPool.find(item => item.loopId === loopId);
+            if (targetItem) targetItem.delayId = delayId;
+        };
+
+        loopPool.push({
+            loopId,
+            interval: intervalMs,
+            callback,
+            delayId: null
+        });
+
+        runLoop();
+
+        return loopId;
+    },
+
+    clearIntervalLoop: (loopId) => {
+        const targetIndex = loopPool.findIndex(item => item.loopId === loopId);
+        if (targetIndex === -1) return false;
+
+        const loopItem = loopPool[targetIndex];
+
+        if (loopItem.delayId) {
+            async.cancelExecution(loopItem.delayId);
+        }
+
+        loopPool.splice(targetIndex, 1);
+
+        return true;
     }
 };
 
-const process_queue = () => {
-    const NOW = Date.now();
-
-    for (let idx = DELAY_QUEUE.length - 1; idx >= 0; --idx) {
-        const ITEM = DELAY_QUEUE[idx];
-
-        if (NOW >= ITEM.FIRE_AT) {
+const processQueue = () => {
+    const now = Date.now();
+    
+    for (let index = delayQueue.length - 1; index >= 0; --index) {
+        const item = delayQueue[index];
+        if (now >= item.fireAt) {
             try {
-                ITEM.CALLBACK();
+                item.callback();
             } catch (err) {
                 console.log(`Caught error: ${err}`);
             }
-
-            DELAY_QUEUE.splice(idx, 1);
+            delayQueue.splice(index, 1);
         }
     }
 };
 
-
 tick = (ms) => {
-    process_queue();
+    processQueue();
 };
