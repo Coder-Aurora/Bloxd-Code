@@ -1,1 +1,3 @@
-# Bloxd-Code
+# Bloxd Code
+
+# No illegal scripts, only code backups!
